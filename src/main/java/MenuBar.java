@@ -136,7 +136,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
         }
 
         graphPanel.setByteStream(byteStream);
-        graphPanel.readFile(graphfile.getName());
+        graphPanel.readFile(graphfile.getAbsolutePath());
 //        logger.debug( rightHandPanes.getComponentAt(textPanes.getSelectedIndex()).getClass());
     }
 
@@ -178,6 +178,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
                     logger.debug("Opened " + filename);
                     textPanes.setTitleAt(textPanes.getSelectedIndex(), filename);
                     graphfile = new File(file.getAbsolutePath().replace(".gv", ".png"));
+                    logger.debug(graphfile);
                     renderNew(file, graphfile, -1);
 
                     // Add filename to list of files in tabs
