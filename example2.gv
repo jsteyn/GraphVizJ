@@ -1,0 +1,20 @@
+digraph G {
+	node [shape=record, height=1];
+	clinician;
+	model[label="model in|model|model out"];
+	data [ label="Data"];
+	user;
+	monitor [color="green"];
+	training [shape=oval];
+	database [shape=box3d];
+	{rank=same; "data"; "database";}
+
+	user -> data [ label="Input"];
+	data -> model[headport=nw];
+	data -> database[tailport=e];
+	model -> monitor[tailport=e];
+	model -> training;
+	model -> clinician [tailport=e];
+	monitor -> training [label="retrain (Y/N)", color="green"];
+	database -> training;
+}
