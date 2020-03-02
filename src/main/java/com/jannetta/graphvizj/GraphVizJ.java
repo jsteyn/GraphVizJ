@@ -15,6 +15,8 @@ public class GraphVizJ extends JFrame {
     private com.jannetta.graphvizj.components.MenuBar menuBar;
     private TextPanes textPanes = new TextPanes();
     private RightHandPanes rightHandPanes = new RightHandPanes();
+    private JPanel consolePane = new JPanel();
+    private JTextArea console = new JTextArea();
 
     public GraphVizJ(String title) {
         super(title);
