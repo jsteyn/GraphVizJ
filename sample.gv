@@ -4,14 +4,16 @@ digraph G {
 	model[label="model in|model|model out"];
 	data [ label="Data"];
 	user;
+	preprocess;
 	monitor [color="green"];
 	training [shape=oval];
 	database [shape=box3d];
 	{rank=same; "data"; "database";}
 
 	user -> data [ label="Input"];
-	data -> model[headport=nw];
-	data -> database[tailport=e];
+	data -> preprocess;
+	preprocess -> model[headport=nw];
+	preprocess -> database[tailport=e];
 	model -> monitor[tailport=e];
 	model -> training;
 	model -> clinician [tailport=e];
