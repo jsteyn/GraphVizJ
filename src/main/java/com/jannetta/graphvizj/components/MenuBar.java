@@ -23,6 +23,7 @@ import java.util.Scanner;
 
 public class MenuBar extends JMenuBar implements ActionListener {
     private Logger logger = Logger.getLogger(this.getClass());
+    private Console console = Console.getInstance();
     private TextPanes textPanes;
     private RightHandPanes rightHandPanes;
     private Properties properties = new Properties();
@@ -45,6 +46,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
             properties.load(is);
             executable = properties.getProperty("executable");
             logger.debug("Dot executable: " + executable);
+            console.log("Dot executable: " + executable);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -336,7 +338,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
         int currentSelectedIndex = textPanes.getSelectedIndex();
         final JFileChooser fc = new JFileChooser(".");
         FileNameExtensionFilter filter = new FileNameExtensionFilter("gv", "gv");
-        int returnVal = fc.showOpenDialog(this);
+        int returnVal = fc.showSaveDialog(this);
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File dotFile = fc.getSelectedFile();
