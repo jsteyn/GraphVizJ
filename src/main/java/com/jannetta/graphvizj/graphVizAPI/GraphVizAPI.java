@@ -1,11 +1,13 @@
 package com.jannetta.graphvizj.graphVizAPI;
 
+import com.jannetta.graphvizj.components.Console;
 import org.apache.log4j.Logger;
 
 import java.io.*;
 
 public class GraphVizAPI {
     private static Logger logger = Logger.getLogger(GraphVizAPI.class);
+    private Console console = Console.getInstance();
 
     /**
      * Writes an array of byte to a file
@@ -50,22 +52,20 @@ public class GraphVizAPI {
                     InputStreamReader(p.getErrorStream()));
 
             // Read the output from the command
-            System.out.println("Here is the standard output of the command:\n");
             String s = null;
             while ((s = stdInput.readLine()) != null) {
-                System.out.println(s);
+               Console.log(s);
             }
 
             // Read any errors from the attempted command
-            System.out.println("Here is the standard error of the command (if any):\n");
             while ((s = stdError.readLine()) != null) {
-                System.out.println(s);
+                Console.log(s);
             }
             if (in != null) {
                 in.close();
             }
             if (tmpFile.delete() == false) {
-                System.err.println("Warning: " + tmpFile.getAbsolutePath() + " could not be deleted!");
+                Console.log("Warning: " + tmpFile.getAbsolutePath() + " could not be deleted!");
             }
 
         } catch (IOException e) {

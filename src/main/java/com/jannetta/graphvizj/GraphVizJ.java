@@ -1,9 +1,7 @@
 package com.jannetta.graphvizj;
 
-import com.jannetta.graphvizj.components.MainPanel;
+import com.jannetta.graphvizj.components.*;
 import com.jannetta.graphvizj.components.MenuBar;
-import com.jannetta.graphvizj.components.RightHandPanes;
-import com.jannetta.graphvizj.components.TextPanes;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -11,12 +9,11 @@ import java.awt.*;
 
 public class GraphVizJ extends JFrame {
     private Logger logger = Logger.getLogger(this.getClass());
+    private Console console = Console.getInstance();
     private MainPanel mainPanel;
     private com.jannetta.graphvizj.components.MenuBar menuBar;
     private TextPanes textPanes = new TextPanes();
     private RightHandPanes rightHandPanes = new RightHandPanes();
-    private JPanel consolePane = new JPanel();
-    private JTextArea console = new JTextArea();
 
     public GraphVizJ(String title) {
         super(title);
@@ -30,9 +27,8 @@ public class GraphVizJ extends JFrame {
         } catch (NullPointerException e) {
             logger.error("Logo.png not found.");
         }
-        menuBar = new MenuBar(textPanes, rightHandPanes);
-        mainPanel = new MainPanel(this, textPanes, rightHandPanes);
-        setJMenuBar(menuBar);
+       menuBar = new MenuBar(textPanes, rightHandPanes);
+        mainPanel = new MainPanel(this, textPanes, rightHandPanes, console);
         frameLayout();
     }
 
@@ -45,12 +41,16 @@ public class GraphVizJ extends JFrame {
                 }
             }
             this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-
+            setLayout(new BorderLayout());
+            setJMenuBar(menuBar);
             getContentPane().add(mainPanel);
 
             this.pack();
             this.setVisible(true);
             setSize(1024, 768);
+            mainPanel.repaint();
+            mainPanel.revalidate();
+            console.add(console);
         } catch (Exception e) {
             // If Nimbus is not available, you can set the GUI to another look and feel.
         }
