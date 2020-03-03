@@ -14,6 +14,7 @@ import java.io.PrintWriter;
 
 public class Console extends JPanel implements ActionListener {
     private static JTextArea console = new JTextArea();
+    private static JScrollPane consoleScroller = new JScrollPane(console);
     private static Console thisConsole = null;
     private static JPanel buttonPanel = new JPanel();
     private static JButton clear = new JButton("Clear");
@@ -34,14 +35,14 @@ public class Console extends JPanel implements ActionListener {
             buttonPanel.add(clear);
             buttonPanel.add(save);
 
-            thisConsole.add(console, BorderLayout.CENTER);
+            thisConsole.add(consoleScroller, BorderLayout.CENTER);
             thisConsole.add(buttonPanel, BorderLayout.SOUTH);
         }
         return thisConsole;
     }
 
     public static void log(String text) {
-        console.append(text);
+        console.append(text + "\n");
     }
 
     @Override
