@@ -2,6 +2,7 @@ package com.jannetta.graphvizj;
 
 import com.jannetta.graphvizj.components.*;
 import com.jannetta.graphvizj.components.MenuBar;
+import com.jannetta.graphvizj.controller.Globals;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -18,7 +19,7 @@ public class GraphVizJ extends JFrame {
     public GraphVizJ(String title) {
         super(title);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
+        Globals.loadProperties();
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         try {
             Image icon = toolkit.getImage(ClassLoader.getSystemResource("Logo.png"));
@@ -27,7 +28,7 @@ public class GraphVizJ extends JFrame {
         } catch (NullPointerException e) {
             logger.error("Logo.png not found.");
         }
-       menuBar = new MenuBar(textPanes, rightHandPanes);
+        menuBar = new MenuBar(textPanes, rightHandPanes);
         mainPanel = new MainPanel(this, textPanes, rightHandPanes, console);
         frameLayout();
     }

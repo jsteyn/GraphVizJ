@@ -1,0 +1,27 @@
+digraph tree {
+	node[shape="rectangle", color=cadetblue3, style=filled]
+	newtree [label="new decision tree"];
+	node1 [label="1"];
+	node2 [label="2"];
+	node1_1 [label="1.1"];
+	node1_2 [label="1.2"];
+	node [width=0.625, color=darkorange4, style=filled]
+	decision1 [label=""];
+	node [fixedsize=true, shape="circle", color=darkgoldenrod1, style=filled, width=0.625]
+	chance1 [label=""];
+	node [shape="circle", color=darkolivegreen4, style=filled]
+	end1 [label=""];
+	end2 [label=""];
+	end3 [label=""];
+
+	rankdir="LR"
+	newtree -> decision1;
+	decision1 -> node1;
+	decision1 -> node2;
+	node1 -> chance1;
+	chance1 -> node1_1;
+	chance1 -> node1_2;
+	node1_1 -> end1;
+	node1_2 -> end2;
+	node2 -> end3;
+}
