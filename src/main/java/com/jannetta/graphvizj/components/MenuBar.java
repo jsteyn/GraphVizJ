@@ -4,6 +4,7 @@ import com.jannetta.graphvizj.components.DotRSyntaxTextArea;
 import com.jannetta.graphvizj.components.DrawPanel;
 import com.jannetta.graphvizj.components.RightHandPanes;
 import com.jannetta.graphvizj.components.TextPanes;
+import com.jannetta.graphvizj.controller.Globals;
 import com.jannetta.graphvizj.graphVizAPI.GraphVizAPI;
 import com.jannetta.graphvizj.model.FileRecord;
 import com.jannetta.graphvizj.model.ListOfFiles;
@@ -258,13 +259,15 @@ public class MenuBar extends JMenuBar implements ActionListener {
             saveAs();
         }
         if (e.getActionCommand().equals("Open")) {
-            final JFileChooser fc = new JFileChooser(".");
+            final JFileChooser fc = new JFileChooser(Globals.getLastDir());
             FileNameExtensionFilter filter = new FileNameExtensionFilter("gv", "gv");
             fc.setFileFilter(filter);
             int returnVal = fc.showOpenDialog(this);
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 File graphfile;
                 File file = fc.getSelectedFile();
+                Globals.setLastDir(file.getParent());
+
                 // check if file is already open, if not, open it
                 int tabindex = listOfFiles.indexOfTab(file.getAbsolutePath());
                 if (tabindex == -1) {
@@ -336,7 +339,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
 
     private void saveAs() {
         int currentSelectedIndex = textPanes.getSelectedIndex();
-        final JFileChooser fc = new JFileChooser(".");
+        final JFileChooser fc = new JFileChooser(Globals.getLastDir());
         FileNameExtensionFilter filter = new FileNameExtensionFilter("gv", "gv");
         int returnVal = fc.showSaveDialog(this);
 
@@ -354,6 +357,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
             rightHandPanes.setTitleAt(currentSelectedIndex, graphfile.getName());
             listOfFiles.getFiles().get(currentSelectedIndex).setDotFile(dotFile);
             listOfFiles.getFiles().get(currentSelectedIndex).setImageFile(graphfile);
+            Globals.setLastDir(dotFile.getParent());
         }
 
     }
