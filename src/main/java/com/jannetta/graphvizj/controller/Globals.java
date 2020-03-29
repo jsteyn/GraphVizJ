@@ -7,6 +7,8 @@ public class Globals {
     static private Properties properties = null;
     static private String lastDir = "";
 
+     static private String type = "png";
+
     public static void loadProperties() {
         properties  = new Properties();
         try {
@@ -55,6 +57,17 @@ public class Globals {
 
     public static void setLastDir(String lastDir) {
         setProperty("lastdir", lastDir);
+    }
+
+    public static String getType() {
+        type = getProperty("type");
+        if (type == null) type = "png";
+        return type;
+    }
+
+    public static void setType(String type) {
+        Globals.type = type;
+        setProperty("type", type);
     }
 
 }

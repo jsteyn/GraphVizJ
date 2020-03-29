@@ -32,12 +32,13 @@ public class GraphVizAPI {
      * @param filename The input file containing the dot syntax
      * @return the png image created from the dot file as an array of byte
      */
-    public static byte[] runDot(String executable, String filename) {
+    public static byte[] runDot(String executable, String filename, String suffix) {
         byte[] byteStream = null;
+        System.out.println("SUFFIX: " + suffix);
         try {
-            File tmpFile = File.createTempFile("graph_", ".png", new File("./"));
+            File tmpFile = File.createTempFile("graph_", "." + suffix, new File("./"));
             Runtime rt = Runtime.getRuntime();
-            String args[] = {executable, "-Tpng", "-o" + tmpFile, filename};
+            String args[] = {executable, "-T" + suffix, "-o" + tmpFile, filename};
             Process p = rt.exec(args, null);
             p.waitFor();
             logger.debug("Exit value: " + p.exitValue());

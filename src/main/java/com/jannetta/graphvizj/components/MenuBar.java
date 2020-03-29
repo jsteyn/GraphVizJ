@@ -73,6 +73,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
 
         JMenuItem settings;
         JMenuItem layout;
+        JMenuItem export;
 
         JMenuItem about;
 
@@ -133,6 +134,9 @@ public class MenuBar extends JMenuBar implements ActionListener {
         layout = new JMenuItem("Layout");
         layout.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
         layout.addActionListener(this);
+        export = new JMenuItem("Export");
+        export.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.CTRL_MASK));
+        export.addActionListener(this);
 
         //Help
         about = new JMenuItem("About", 'A');
@@ -157,6 +161,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
         //Graph
         graph.add(settings);
         graph.add(layout);
+        graph.add(export);
 
         //Help
         help.add(about);
@@ -200,7 +205,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
      */
     private void renderNew(File filename, File graphfile, int index) {
         // Run the dot exectable
-        byte[] byteStream = GraphVizAPI.runDot(executable, filename.getAbsolutePath());
+        byte[] byteStream = GraphVizAPI.runDot(executable, filename.getAbsolutePath(), Globals.getType());
         // Write the diagram to file
         GraphVizAPI.writeToFile(byteStream, graphfile);
         // Load the diagram into the panel
@@ -249,6 +254,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
 
         }
         if (e.getActionCommand().equals("Save")) {
+            if (textPanes.getTabCount() > 0)
             if (textPanes.getTitleAt(textPanes.getSelectedIndex()).startsWith(newFilePrefix)) {
                 saveAs();
             } else {
@@ -256,7 +262,17 @@ public class MenuBar extends JMenuBar implements ActionListener {
             }
         }
         if (e.getActionCommand().equals("Save As")) {
+            if (textPanes.getTabCount() > 0)
             saveAs();
+        }
+        if (e.getActionCommand().equals("Export")) {
+            if (textPanes.getTabCount() > 0) {
+                String filename = Globals.getLastDir() + "/" + textPanes.getTitleAt(textPanes.getSelectedIndex());
+                String type = Globals.getType();
+                byte[] byteStream = GraphVizAPI.runDot(Globals.getProperty("executable"), filename, type);
+                GraphVizAPI.writeToFile(byteStream, new File(filename.replace(".gv", "." + type)));
+                logger.debug("Export file " + filename + " to " + filename.replace(".gv", "." + type));
+            }
         }
         if (e.getActionCommand().equals("Open")) {
             final JFileChooser fc = new JFileChooser(Globals.getLastDir());
@@ -324,6 +340,8 @@ public class MenuBar extends JMenuBar implements ActionListener {
         }
         if (e.getActionCommand().equals("Settings")) {
             int index = textPanes.getSelectedIndex();
+            Settings settings = Settings.getInstance();
+            settings.setVisible(true);
 
         }
     }
