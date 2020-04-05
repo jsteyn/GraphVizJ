@@ -32,13 +32,17 @@ public class GraphVizAPI {
      * @param filename The input file containing the dot syntax
      * @return the png image created from the dot file as an array of byte
      */
-    public static byte[] runDot(String executable, String filename, String suffix) {
+    public static byte[] runDot(String executable, String filename, String suffix, String layout) {
         byte[] byteStream = null;
-        System.out.println("SUFFIX: " + suffix);
+        logger.debug("SUFFIX: " + suffix);
+        logger.debug("LAYOUT: " + layout);
         try {
+            if (layout == null) {
+                layout = "dot";
+            }
             File tmpFile = File.createTempFile("graph_", "." + suffix, new File("./"));
             Runtime rt = Runtime.getRuntime();
-            String args[] = {executable, "-T" + suffix, "-o" + tmpFile, filename};
+            String args[] = {executable, "-T" + suffix, "-o" + tmpFile, "-K" + layout, filename};
             Process p = rt.exec(args, null);
             p.waitFor();
             logger.debug("Exit value: " + p.exitValue());
@@ -53,7 +57,7 @@ public class GraphVizAPI {
                     InputStreamReader(p.getErrorStream()));
 
             // Read the output from the command
-            String s = null;
+            String s;
             while ((s = stdInput.readLine()) != null) {
                Console.log(s);
             }
@@ -62,16 +66,12 @@ public class GraphVizAPI {
             while ((s = stdError.readLine()) != null) {
                 Console.log(s);
             }
-            if (in != null) {
-                in.close();
-            }
-            if (tmpFile.delete() == false) {
+            in.close();
+            if (!tmpFile.delete()) {
                 Console.log("Warning: " + tmpFile.getAbsolutePath() + " could not be deleted!");
             }
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
         return byteStream;
