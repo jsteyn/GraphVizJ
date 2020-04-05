@@ -4,9 +4,11 @@ import com.jannetta.graphvizj.controller.Globals;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.Properties;
 
 public class Settings extends JFrame implements ActionListener {
@@ -20,7 +22,7 @@ public class Settings extends JFrame implements ActionListener {
     private String[] types = {"png", "svg", "bmp", "canon", "dot", "fig", "gd", "gif", "imap", "cmapx", "pdf", "plain", "png", "ps", "ps2", "vrml", "wbmp"};
     private JLabel lbl_layoutEngine = new JLabel("Layout Engine");
     private JLabel lbl_outputType = new JLabel("Output File Type");
-    private JLabel lbl_outputFile = new JLabel("Output File Name");
+    private JLabel lbl_outputFile = new JLabel("Output Directory Name");
     private JComboBox<String> cb_layoutEngine = new JComboBox<>(layouts);
     private JComboBox<String> cb_outputType = new JComboBox<>(types);
     private JTextField tf_outputFile = new JTextField(25);
@@ -56,10 +58,13 @@ public class Settings extends JFrame implements ActionListener {
         holdAll.add(selectFile);
         holdAll.add(save);
 
+        selectFile.addActionListener(this);
+
         String layoutIndex = Globals.getLayout();
         cb_layoutEngine.setSelectedIndex(indexOf(layouts, layoutIndex));
         String typeIndex = Globals.getType();
         cb_outputType.setSelectedIndex(indexOf(types,typeIndex));
+        tf_outputFile.setText(Globals.getOutputDir());
 
         layout.putConstraint(SpringLayout.WEST, lbl_layoutEngine,
                 5,
@@ -129,7 +134,18 @@ public class Settings extends JFrame implements ActionListener {
         if (action.equals("save")) {
             Globals.setType((String)cb_outputType.getSelectedItem());
             Globals.setLayout((String)cb_layoutEngine.getSelectedItem());
+            Globals.setOutputDir(tf_outputFile.getText());
             logger.debug("Store properties");
+       }
+       if (action.equals("...")) {
+           final JFileChooser fc = new JFileChooser(Globals.getLastDir());
+           fc.setCurrentDirectory(new File(Globals.getOutputDir()));
+           fc.setAcceptAllFileFilterUsed(false);
+           fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+           int returnVal = fc.showOpenDialog(this);
+           if (returnVal == JFileChooser.APPROVE_OPTION) {
+                tf_outputFile.setText(String.valueOf(fc.getSelectedFile()));
+           }
        }
     }
 
