@@ -17,6 +17,7 @@ import javax.swing.text.DefaultEditorKit;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.*;
 import java.util.Properties;
@@ -47,7 +48,6 @@ public class MenuBar extends JMenuBar implements ActionListener {
             properties.load(is);
             executable = properties.getProperty("executable");
             logger.debug("Dot executable: " + executable);
-            console.log("Dot executable: " + executable);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -90,13 +90,13 @@ public class MenuBar extends JMenuBar implements ActionListener {
 
         // File
         newfile = new JMenuItem("New", 'N');
-        newfile.setAccelerator((KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK)));
+        newfile.setAccelerator((KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK)));
         newfile.addActionListener(this);
         openFile = new JMenuItem("Open", 'O');
-        openFile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
+        openFile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK));
         openFile.addActionListener(this);
         saveFile = new JMenuItem("Save", 'S');
-        saveFile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
+        saveFile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK));
         saveFile.addActionListener(this);
         saveAsFile = new JMenuItem("Save As", 'A');
         saveAsFile.addActionListener(this);
@@ -107,35 +107,35 @@ public class MenuBar extends JMenuBar implements ActionListener {
         cut = new JMenuItem(new DefaultEditorKit.CutAction());
         cut.setText("Cut");
         cut.setMnemonic(KeyEvent.VK_T);
-        cut.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK));
+        cut.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.CTRL_MASK));
 
         copy = new JMenuItem(new DefaultEditorKit.CopyAction());
         copy.setText("Copy");
         copy.setMnemonic(KeyEvent.VK_C);
-        copy.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.CTRL_MASK));
+        copy.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_MASK));
 
         paste = new JMenuItem(new DefaultEditorKit.PasteAction());
         paste.setText("Paste");
         paste.setMnemonic(KeyEvent.VK_V);
-        paste.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.CTRL_MASK));
+        paste.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, InputEvent.CTRL_MASK));
 
         //Window
         close = new JMenuItem("Close");
-        close.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, ActionEvent.CTRL_MASK));
+        close.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.CTRL_MASK));
         close.addActionListener(this);
         closeAll = new JMenuItem("Close All", 'A');
-        closeAll.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK));
+        closeAll.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.CTRL_MASK));
         closeAll.addActionListener(this);
 
         //Graph
         settings = new JMenuItem("Settings");
-        settings.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5, ActionEvent.SHIFT_MASK));
+        settings.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5, InputEvent.SHIFT_MASK));
         settings.addActionListener(this);
         layout = new JMenuItem("Layout");
         layout.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
         layout.addActionListener(this);
         export = new JMenuItem("Export");
-        export.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.CTRL_MASK));
+        export.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, InputEvent.CTRL_MASK));
         export.addActionListener(this);
 
         //Help
@@ -205,7 +205,8 @@ public class MenuBar extends JMenuBar implements ActionListener {
      */
     private void renderNew(File filename, File graphfile, int index) {
         // Run the dot exectable
-        byte[] byteStream = GraphVizAPI.runDot(executable, filename.getAbsolutePath(), Globals.getType());
+        Globals.loadProperties();
+        byte[] byteStream = GraphVizAPI.runDot(executable, filename.getAbsolutePath(), Globals.getType(), Globals.getLayout());
         // Write the diagram to file
         GraphVizAPI.writeToFile(byteStream, graphfile);
         // Load the diagram into the panel
@@ -218,8 +219,8 @@ public class MenuBar extends JMenuBar implements ActionListener {
 //        logger.debug( rightHandPanes.getComponentAt(textPanes.getSelectedIndex()).getClass());
     }
 
-    protected ImageIcon createImageIcon(String path,
-                                        String description) {
+    private ImageIcon createImageIcon(String path,
+                                      String description) {
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         try {
             Image icon = toolkit.getImage(ClassLoader.getSystemResource("Logo.png"));
@@ -269,7 +270,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
             if (textPanes.getTabCount() > 0) {
                 String filename = Globals.getLastDir() + "/" + textPanes.getTitleAt(textPanes.getSelectedIndex());
                 String type = Globals.getType();
-                byte[] byteStream = GraphVizAPI.runDot(Globals.getProperty("executable"), filename, type);
+                byte[] byteStream = GraphVizAPI.runDot(Globals.getProperty("executable"), filename, type, Globals.getLayout());
                 GraphVizAPI.writeToFile(byteStream, new File(filename.replace(".gv", "." + type)));
                 logger.debug("Export file " + filename + " to " + filename.replace(".gv", "." + type));
             }
@@ -292,7 +293,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
                         Scanner sc = new Scanner(file);
                         StringBuilder sb = new StringBuilder();
                         while (sc.hasNext()) {
-                            sb.append(sc.nextLine() + "\n");
+                            sb.append(sc.nextLine()).append("\n");
                         }
                         String filename = file.getName();
                         logger.debug("Opened " + filename);
@@ -341,6 +342,8 @@ public class MenuBar extends JMenuBar implements ActionListener {
         if (e.getActionCommand().equals("Settings")) {
             int index = textPanes.getSelectedIndex();
             Settings settings = Settings.getInstance();
+//            JDialog dialog_settings = new JDialog(settings, "", Dialog.DEFAULT_MODALITY_TYPE);
+//            dialog_settings.setVisible(true);
             settings.setVisible(true);
 
         }

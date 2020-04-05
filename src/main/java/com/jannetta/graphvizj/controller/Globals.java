@@ -6,11 +6,11 @@ import java.util.Properties;
 public class Globals {
     static private Properties properties = null;
     static private String lastDir = "";
-
-     static private String type = "png";
+    static private String type = "png";
+    static private String layout = "dot";
 
     public static void loadProperties() {
-        properties  = new Properties();
+        properties = new Properties();
         try {
             File f = new File("system.properties");
             if (!(f.exists())) {
@@ -68,6 +68,17 @@ public class Globals {
     public static void setType(String type) {
         Globals.type = type;
         setProperty("type", type);
+    }
+
+
+    public static String getLayout() {
+        layout = getProperty("layout");
+        if (layout == null) layout = "dot";
+        return layout;
+    }
+
+    public static void setLayout(String layout) {
+        setProperty("layout", layout);
     }
 
 }

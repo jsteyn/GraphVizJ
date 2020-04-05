@@ -7,16 +7,17 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Properties;
 
 public class Settings extends JFrame implements ActionListener {
     private Logger logger = Logger.getLogger(this.getClass());
     static private Settings settings = null;
     private JPanel holdAll = new JPanel();
 
-    SpringLayout layout = new SpringLayout();
-    Container contentPane = getContentPane();
-    String[] layouts = {"circo", "dot", "fdp"};
-    String[] types = {"png", "svg", "dot", "bmp"};
+    private SpringLayout layout = new SpringLayout();
+    private Container contentPane = getContentPane();
+    private String[] layouts = {"dot", "neato", "fdp", "circo", "osage", "patchwork", "sfdp", "twopi", "lefty", "dotty"};
+    private String[] types = {"png", "svg", "bmp", "canon", "dot", "fig", "gd", "gif", "imap", "cmapx", "pdf", "plain", "png", "ps", "ps2", "vrml", "wbmp"};
     private JLabel lbl_layoutEngine = new JLabel("Layout Engine");
     private JLabel lbl_outputType = new JLabel("Output File Type");
     private JLabel lbl_outputFile = new JLabel("Output File Name");
@@ -54,6 +55,11 @@ public class Settings extends JFrame implements ActionListener {
         holdAll.add(tf_outputFile);
         holdAll.add(selectFile);
         holdAll.add(save);
+
+        String layoutIndex = Globals.getLayout();
+        cb_layoutEngine.setSelectedIndex(indexOf(layouts, layoutIndex));
+        String typeIndex = Globals.getType();
+        cb_outputType.setSelectedIndex(indexOf(types,typeIndex));
 
         layout.putConstraint(SpringLayout.WEST, lbl_layoutEngine,
                 5,
@@ -121,8 +127,18 @@ public class Settings extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String action = e.getActionCommand();
         if (action.equals("save")) {
-            logger.debug("saving ...");
             Globals.setType((String)cb_outputType.getSelectedItem());
+            Globals.setLayout((String)cb_layoutEngine.getSelectedItem());
+            logger.debug("Store properties");
+       }
+    }
+
+    private int indexOf(String[] array, String str) {
+        for (int i = 0; i < array.length; i++) {
+            if (array[i].equals(str)) {
+                return i;
+            }
         }
+        return 0;
     }
 }

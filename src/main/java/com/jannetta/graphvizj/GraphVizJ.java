@@ -16,7 +16,7 @@ public class GraphVizJ extends JFrame {
     private TextPanes textPanes = new TextPanes();
     private RightHandPanes rightHandPanes = new RightHandPanes();
 
-    public GraphVizJ(String title) {
+    private GraphVizJ(String title) {
         super(title);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         Globals.loadProperties();
@@ -41,7 +41,7 @@ public class GraphVizJ extends JFrame {
                     break;
                 }
             }
-            this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+            this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             setLayout(new BorderLayout());
             setJMenuBar(menuBar);
             getContentPane().add(mainPanel);
@@ -61,4 +61,5 @@ public class GraphVizJ extends JFrame {
     public static void main(String[] args) {
         GraphVizJ graphVizJ = new GraphVizJ("GraphVizJ");
     }
+
 }
