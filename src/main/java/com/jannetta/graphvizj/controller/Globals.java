@@ -10,6 +10,9 @@ public class Globals {
     static private String type = "png";
     static private String layout = "dot";
 
+    /**
+     * Load properties from system.properties file
+     */
     public static void loadProperties() {
         properties = new Properties();
         try {
@@ -33,6 +36,11 @@ public class Globals {
         }
     }
 
+    /**
+     * Set the specified property with the specified value
+     * @param property The property to set
+     * @param value The value to set the property to
+     */
     public static void setProperty(String property, String value) {
         properties.setProperty(property, value);
         File f = new File("system.properties");
@@ -45,6 +53,11 @@ public class Globals {
         }
     }
 
+    /**
+     * Get the specified property and return its value
+     * @param property property to return
+     * @return property
+     */
     public static String getProperty(String property) {
         if (properties == null) {
             loadProperties();
@@ -52,42 +65,73 @@ public class Globals {
         return properties.getProperty(property);
     }
 
+    /**
+     * Get the last directory that something was saved to or opened from
+     * @return lastDir
+     */
     public static String getLastDir() {
         return getProperty("lastdir");
     }
 
+    /**
+     * Set the value of lastDir
+     * @param lastDir
+     */
     public static void setLastDir(String lastDir) {
         setProperty("lastdir", lastDir);
     }
 
+    /**
+     * Get the current dot Type saved in the properties file.
+     * @return type
+     */
     public static String getType() {
         type = getProperty("type");
         if (type == null) type = "png";
         return type;
     }
 
+    /**
+     * Set the dot Type
+     * @param type
+     */
     public static void setType(String type) {
         Globals.type = type;
         setProperty("type", type);
     }
 
-
+    /**
+     * Get the current layout saved in the properties file
+     * @return layout
+     */
     public static String getLayout() {
         layout = getProperty("layout");
         if (layout == null) layout = "dot";
         return layout;
     }
 
+    /**
+     * Set the layout
+     * @param layout
+     */
     public static void setLayout(String layout) {
         setProperty("layout", layout);
     }
 
+    /**
+     * Get the outputDir from the properties file
+     * @return outputDir
+     */
     public static String getOutputDir() {
         outputDir = getProperty("outputDir");
         if (outputDir == null) outputDir = "./";
         return outputDir;
     }
 
+    /**
+     * Set the outputDir
+     * @param outputDir
+     */
     public static void setOutputDir(String outputDir) {
         Globals.outputDir = outputDir;
         setProperty("outputDir", outputDir);
