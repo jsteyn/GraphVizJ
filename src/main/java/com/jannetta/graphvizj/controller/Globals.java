@@ -6,6 +6,7 @@ import java.util.Properties;
 public class Globals {
     static private Properties properties = null;
     static private String lastDir = "";
+    static private String outputDir = "";
     static private String type = "png";
     static private String layout = "dot";
 
@@ -81,4 +82,14 @@ public class Globals {
         setProperty("layout", layout);
     }
 
+    public static String getOutputDir() {
+        outputDir = getProperty("outputDir");
+        if (outputDir == null) outputDir = "./";
+        return outputDir;
+    }
+
+    public static void setOutputDir(String outputDir) {
+        Globals.outputDir = outputDir;
+        setProperty("outputDir", outputDir);
+    }
 }

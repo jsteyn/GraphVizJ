@@ -30,21 +30,27 @@ public class GraphVizAPI {
      * Run the dot command as an external executable
      * @param executable A string givign the full path to the dot executable
      * @param filename The input file containing the dot syntax
+     * @param fileType the type of file to save to
+     * @param layout The layout to use for generating the graph
      * @return the png image created from the dot file as an array of byte
      */
-    public static byte[] runDot(String executable, String filename, String suffix, String layout) {
+    //https://stackoverflow.com/questions/6751944/how-to-execute-unix-commands-through-windows-cygwin-using-java
+    public static byte[] runDot(String executable, String filename, String fileType, String layout) {
         byte[] byteStream = null;
-        logger.debug("SUFFIX: " + suffix);
+        logger.debug("SUFFIX: " + fileType);
         logger.debug("LAYOUT: " + layout);
         try {
             if (layout == null) {
                 layout = "dot";
             }
-            File tmpFile = File.createTempFile("graph_", "." + suffix, new File("./"));
+            File tmpFile = File.createTempFile("graph_", "." + fileType, new File("./"));
             Runtime rt = Runtime.getRuntime();
-            String args[] = {executable, "-T" + suffix, "-o" + tmpFile, "-K" + layout, filename};
+            String dotcommand = executable + " -T" + fileType + " -o" + tmpFile + " -K" + layout + " " + filename;
+            String args[] = {executable, "-T" + fileType, "-o" + tmpFile, "-K" + layout, filename};
+           // String args[] = {"c:\\cygwin64\\bin\\dot", " -T" + fileType, "-o" + tmpFile, "-K" + layout, filename};
             Process p = rt.exec(args, null);
             p.waitFor();
+
             logger.debug("Exit value: " + p.exitValue());
             FileInputStream in = new FileInputStream(tmpFile.getAbsolutePath());
             byteStream = new byte[in.available()];

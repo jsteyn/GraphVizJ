@@ -201,22 +201,24 @@ public class MenuBar extends JMenuBar implements ActionListener {
      * @param filename  The name of the dot file
      * @param graphfile The name of the file to write the graph to
      * @param index     The index of the tab in which the diagram should be displayed (-1 if it is a
-     *                  newly opened file)
+     *                  newly opened file, -2 for exporting no tab rendering is done)
      */
-    private void renderNew(File filename, File graphfile, int index) {
+    private void renderNew(File filename, File graphfile, int index, String type) {
         // Run the dot exectable
         Globals.loadProperties();
-        byte[] byteStream = GraphVizAPI.runDot(executable, filename.getAbsolutePath(), Globals.getType(), Globals.getLayout());
+        byte[] byteStream = GraphVizAPI.runDot(executable, filename.getAbsolutePath(), type, Globals.getLayout());
         // Write the diagram to file
         GraphVizAPI.writeToFile(byteStream, graphfile);
-        // Load the diagram into the panel
-        DrawPanel drawPanel = (DrawPanel) ((JScrollPane) rightHandPanes.getComponentAt(index)).getViewport().getComponent(0);
-        drawPanel.setByteStream(byteStream);
-        drawPanel.readFile(graphfile.getAbsolutePath());
-        ((JScrollPane) rightHandPanes.getComponentAt(index)).setViewportView(drawPanel);
-        rightHandPanes.getComponentAt(index).revalidate();
-        rightHandPanes.getComponentAt(index).repaint();
+        if (index > -2) {
+            // Load the diagram into the panel
+            DrawPanel drawPanel = (DrawPanel) ((JScrollPane) rightHandPanes.getComponentAt(index)).getViewport().getComponent(0);
+            drawPanel.setByteStream(byteStream);
+            drawPanel.readFile(graphfile.getAbsolutePath());
+            ((JScrollPane) rightHandPanes.getComponentAt(index)).setViewportView(drawPanel);
+            rightHandPanes.getComponentAt(index).revalidate();
+            rightHandPanes.getComponentAt(index).repaint();
 //        logger.debug( rightHandPanes.getComponentAt(textPanes.getSelectedIndex()).getClass());
+        }
     }
 
     private ImageIcon createImageIcon(String path,
@@ -268,11 +270,11 @@ public class MenuBar extends JMenuBar implements ActionListener {
         }
         if (e.getActionCommand().equals("Export")) {
             if (textPanes.getTabCount() > 0) {
-                String filename = Globals.getLastDir() + "/" + textPanes.getTitleAt(textPanes.getSelectedIndex());
-                String type = Globals.getType();
-                byte[] byteStream = GraphVizAPI.runDot(Globals.getProperty("executable"), filename, type, Globals.getLayout());
-                GraphVizAPI.writeToFile(byteStream, new File(filename.replace(".gv", "." + type)));
-                logger.debug("Export file " + filename + " to " + filename.replace(".gv", "." + type));
+                File filename = new File(Globals.getLastDir() + "/" + textPanes.getTitleAt(textPanes.getSelectedIndex()));
+                File outfile = new File(Globals.getOutputDir() + "/" + textPanes.getTitleAt(textPanes.getSelectedIndex()).replace(".gv", "." + Globals.getType()));
+                String fileType = Globals.getType();
+                renderNew(filename, outfile, -2, fileType);
+                logger.debug("Export file " + filename + " to " + outfile);
             }
         }
         if (e.getActionCommand().equals("Open")) {
@@ -281,7 +283,6 @@ public class MenuBar extends JMenuBar implements ActionListener {
             fc.setFileFilter(filter);
             int returnVal = fc.showOpenDialog(this);
             if (returnVal == JFileChooser.APPROVE_OPTION) {
-                File graphfile;
                 File file = fc.getSelectedFile();
                 Globals.setLastDir(file.getParent());
 
@@ -297,10 +298,11 @@ public class MenuBar extends JMenuBar implements ActionListener {
                         }
                         String filename = file.getName();
                         logger.debug("Opened " + filename);
-                        graphfile = new File(file.getAbsolutePath().replace(".gv", ".png"));
+                        //graphfile = new File(file.getAbsolutePath().replace(".gv", ".png"));
+                        File graphfile = new File(Globals.getOutputDir() + "/" + file.getName().replace(".gv", ".png"));
                         int selected = newTab(filename, graphfile.getName());
                         ((RTextScrollPane) textPanes.getComponentAt(selected)).getTextArea().setText(sb.toString());
-                        renderNew(file, graphfile, selected);
+                        renderNew(file, graphfile, selected, "png");
 
                         // Add filename to list of files in tabs
                         listOfFiles.getFiles().add(new FileRecord(selected, file, graphfile));
@@ -353,9 +355,10 @@ public class MenuBar extends JMenuBar implements ActionListener {
         logger.debug("Saving ..." + listOfFiles.getFiles().get(textPanes.getSelectedIndex()).getDotFile());
         int index = textPanes.getSelectedIndex();
         File dotFile = listOfFiles.getFiles().get(index).getDotFile();
-        File gaphFile = listOfFiles.getFiles().get(index).getImageFile();
+        File graphfile = new File(Globals.getOutputDir() + "/" + dotFile.getName().replace(".gv", ".png"));
+        logger.debug("Render: " + graphfile.getAbsolutePath());
         GraphVizAPI.writeText(((RTextScrollPane) textPanes.getSelectedComponent()).getTextArea().getText(), dotFile);
-        renderNew(dotFile, gaphFile, index);
+        renderNew(dotFile, graphfile, index, "png");
     }
 
     private void saveAs() {
@@ -371,9 +374,10 @@ public class MenuBar extends JMenuBar implements ActionListener {
                 dotFile = new File(fc.getSelectedFile() + ".gv");
             }
             fc.setFileFilter(filter);
-            File graphfile = new File(dotFile.getAbsolutePath().replace(".gv", ".png"));
+            File graphfile = new File(Globals.getOutputDir() + "/" + dotFile.getName().replace(".gv", ".png"));
             GraphVizAPI.writeText(((RTextScrollPane) textPanes.getSelectedComponent()).getTextArea().getText(), dotFile);
-            renderNew(dotFile, graphfile, currentSelectedIndex);
+            logger.debug("Render: " + graphfile.getAbsolutePath());
+            renderNew(dotFile, graphfile, currentSelectedIndex, "png");
             textPanes.setTitleAt(currentSelectedIndex, dotFile.getName());
             rightHandPanes.setTitleAt(currentSelectedIndex, graphfile.getName());
             listOfFiles.getFiles().get(currentSelectedIndex).setDotFile(dotFile);
