@@ -241,7 +241,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
                     "GraphVizJ is an editor, written in Java for Graphviz.\n" +
                             "It provides functionality similar to GVEdit but with a few extra\n" +
                             "features and differences in the user interface.\n\n" +
-                            "Version 1.0\n\n" +
+                            "Version 1.0 (2020/04/20)\n\n" +
                             "Copyright: Jannetta S Steyn, 2020",
                     "About GraphVizJ", JOptionPane.PLAIN_MESSAGE,
                     icon);
