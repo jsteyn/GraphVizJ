@@ -3,3 +3,6 @@
 target/*
 out/*
 src/main/java/META-INF/*
+/target/
+*.log
+*.png

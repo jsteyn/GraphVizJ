@@ -9,6 +9,12 @@ import com.jannetta.graphvizj.graphVizAPI.GraphVizAPI;
 import com.jannetta.graphvizj.model.FileRecord;
 import com.jannetta.graphvizj.model.ListOfFiles;
 import org.apache.log4j.Logger;
+import org.fife.ui.autocomplete.AutoCompletion;
+import org.fife.ui.autocomplete.BasicCompletion;
+import org.fife.ui.autocomplete.CompletionProvider;
+import org.fife.ui.autocomplete.DefaultCompletionProvider;
+import org.fife.ui.autocomplete.ShorthandCompletion;
+import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
 import javax.swing.*;
@@ -181,6 +187,11 @@ public class MenuBar extends JMenuBar implements ActionListener {
     private int newTab(String dotfile, String graphfile) {
         // Add a new text tab
         DotRSyntaxTextArea dotRSyntaxTextArea = new DotRSyntaxTextArea();
+        dotRSyntaxTextArea.setBracketMatchingEnabled(true);
+        dotRSyntaxTextArea.setAutoIndentEnabled(true);
+        dotRSyntaxTextArea.setAnimateBracketMatching(true);
+        dotRSyntaxTextArea.setCloseCurlyBraces(true); 
+        
         DrawPanel drawPanel = new DrawPanel();
         RTextScrollPane rTextScrollPane = new RTextScrollPane(dotRSyntaxTextArea);
         JScrollPane jScrollPane = new JScrollPane();
@@ -192,6 +203,10 @@ public class MenuBar extends JMenuBar implements ActionListener {
         int index = textPanes.getTabCount() - 1;
         textPanes.setSelectedIndex(index);
         rightHandPanes.setSelectedIndex(index);
+        
+        CompletionProvider completionProvider = createCompletionProvider();
+        AutoCompletion autoCompletion = new AutoCompletion(completionProvider);
+        autoCompletion.install(dotRSyntaxTextArea);
         return textPanes.getTabCount() - 1;
     }
 
@@ -241,7 +256,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
                     "GraphVizJ is an editor, written in Java for Graphviz.\n" +
                             "It provides functionality similar to GVEdit but with a few extra\n" +
                             "features and differences in the user interface.\n\n" +
-                            "Version 1.0 (2020/04/20)\n\n" +
+                            "Version 1.1 (2020/09/30)\n\n" +
                             "Copyright: Jannetta S Steyn, 2020",
                     "About GraphVizJ", JOptionPane.PLAIN_MESSAGE,
                     icon);
@@ -394,6 +409,42 @@ public class MenuBar extends JMenuBar implements ActionListener {
         textPanes.remove(index);
         rightHandPanes.remove(index);
         listOfFiles.getFiles().remove(index);
+
+    }
+    /**
+     * Create a simple provider that adds some Java-related completions.
+     */
+    private CompletionProvider createCompletionProvider() {
+    	//TODO Move this to a separate class
+
+       // A DefaultCompletionProvider is the simplest concrete implementation
+       // of CompletionProvider. This provider has no understanding of
+       // language semantics. It simply checks the text entered up to the
+       // caret position for a match against known completions. This is all
+       // that is needed in the majority of cases.
+       DefaultCompletionProvider provider = new DefaultCompletionProvider();
+
+       // Add completions for all Java keywords. A BasicCompletion is just
+       // a straightforward word completion.
+       provider.addCompletion(new BasicCompletion(provider, "label"));
+       provider.addCompletion(new BasicCompletion(provider, "node"));
+       provider.addCompletion(new BasicCompletion(provider, "subGraph"));
+       provider.addCompletion(new BasicCompletion(provider, "diGraph"));
+       // ... etc ...
+       provider.addCompletion(new BasicCompletion(provider, "edge"));
+       provider.addCompletion(new BasicCompletion(provider, "graph"));
+       provider.addCompletion(new BasicCompletion(provider, "shape"));
+       provider.addCompletion(new BasicCompletion(provider, "height"));
+       provider.addCompletion(new BasicCompletion(provider, "strict"));
+
+       // Add a couple of "shorthand" completions. These completions don't
+       // require the input text to be the same thing as the replacement text.
+       provider.addCompletion(new ShorthandCompletion(provider, "sysout",
+             "System.out.println(", "System.out.println("));
+       provider.addCompletion(new ShorthandCompletion(provider, "syserr",
+             "System.err.println(", "System.err.println("));
+
+       return provider;
 
     }
 }

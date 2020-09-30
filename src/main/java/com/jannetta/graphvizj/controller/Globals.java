@@ -9,6 +9,7 @@ public class Globals {
     static private String outputDir = "";
     static private String type = "png";
     static private String layout = "dot";
+    static private String executable = "";
 
     /**
      * Load properties from system.properties file
@@ -135,5 +136,24 @@ public class Globals {
     public static void setOutputDir(String outputDir) {
         Globals.outputDir = outputDir;
         setProperty("outputDir", outputDir);
+    }
+    
+    /**
+     * Set the dot executable - whole path + executable
+     * @param executable
+     */
+    public static void setExecutable(String executable) {
+    	Globals.executable = executable;
+    	setProperty("executable", executable);
+    }
+    
+    /**
+     * Get the location of the dot executable
+     * @return
+     */
+    public static String getExecutable() {
+    	executable = getProperty("executable");
+    	if (executable == null) executable = "dot";
+    	return executable;
     }
 }

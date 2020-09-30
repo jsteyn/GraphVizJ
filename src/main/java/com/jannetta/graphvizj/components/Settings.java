@@ -23,10 +23,13 @@ public class Settings extends JFrame implements ActionListener {
     private JLabel lbl_layoutEngine = new JLabel("Layout Engine");
     private JLabel lbl_outputType = new JLabel("Output File Type");
     private JLabel lbl_outputFile = new JLabel("Output Directory Name");
+    private JLabel lbl_executable = new JLabel("Dot Executable");
     private JComboBox<String> cb_layoutEngine = new JComboBox<>(layouts);
     private JComboBox<String> cb_outputType = new JComboBox<>(types);
     private JTextField tf_outputFile = new JTextField(25);
+    private JTextField tf_executable = new JTextField(25);
     private JButton selectFile = new JButton("...");
+    private JButton selectExecutable = new JButton("...");
     private JButton save = new JButton("save");
 
     public static Settings getInstance() {
@@ -45,7 +48,10 @@ public class Settings extends JFrame implements ActionListener {
         lbl_layoutEngine.setPreferredSize(new Dimension(150, (int) lbl_layoutEngine.getPreferredSize().getHeight()));
         lbl_outputType.setPreferredSize(new Dimension(150, (int) lbl_outputType.getPreferredSize().getHeight()));
         lbl_outputFile.setPreferredSize(new Dimension(150, (int) lbl_outputFile.getPreferredSize().getHeight()));
+        lbl_executable.setPreferredSize(new Dimension(150, (int) lbl_executable.getPreferredSize().getHeight()));
 
+        selectFile.setActionCommand("selectFile");
+        selectExecutable.setActionCommand("selectExecutable");
 
         holdAll.setLayout(layout);
 
@@ -54,8 +60,11 @@ public class Settings extends JFrame implements ActionListener {
         holdAll.add(lbl_outputType);
         holdAll.add(cb_outputType);
         holdAll.add(lbl_outputFile);
+        holdAll.add(lbl_executable);
         holdAll.add(tf_outputFile);
+        holdAll.add(tf_executable);
         holdAll.add(selectFile);
+        holdAll.add(selectExecutable);
         holdAll.add(save);
 
         selectFile.addActionListener(this);
@@ -65,6 +74,7 @@ public class Settings extends JFrame implements ActionListener {
         String typeIndex = Globals.getType();
         cb_outputType.setSelectedIndex(indexOf(types,typeIndex));
         tf_outputFile.setText(Globals.getOutputDir());
+        tf_executable.setText(Globals.getExecutable());
 
         layout.putConstraint(SpringLayout.WEST, lbl_layoutEngine,
                 5,
@@ -115,11 +125,37 @@ public class Settings extends JFrame implements ActionListener {
                 90,
                 SpringLayout.NORTH, holdAll);
 
+        
+        layout.putConstraint(SpringLayout.WEST, lbl_executable,
+                5,
+                SpringLayout.WEST, holdAll);
+        layout.putConstraint(SpringLayout.NORTH, lbl_executable,
+                135,
+                SpringLayout.NORTH, holdAll);
+
+        layout.putConstraint(SpringLayout.WEST, tf_executable,
+                5,
+                SpringLayout.EAST, lbl_outputFile);
+        layout.putConstraint(SpringLayout.NORTH, tf_executable,
+        		135,
+                SpringLayout.NORTH, holdAll);
+
+        layout.putConstraint(SpringLayout.WEST, selectExecutable,
+                5,
+                SpringLayout.EAST, tf_outputFile);
+        layout.putConstraint(SpringLayout.NORTH, selectExecutable,
+        		135,
+                SpringLayout.NORTH, holdAll);
+
+        
+        
+        
+        
         layout.putConstraint(SpringLayout.WEST, save,
                 5,
                 SpringLayout.WEST, holdAll);
         layout.putConstraint(SpringLayout.NORTH, save,
-                130,
+                170,
                 SpringLayout.NORTH, holdAll);
 
         contentPane.add(holdAll);
@@ -135,18 +171,29 @@ public class Settings extends JFrame implements ActionListener {
             Globals.setType((String)cb_outputType.getSelectedItem());
             Globals.setLayout((String)cb_layoutEngine.getSelectedItem());
             Globals.setOutputDir(tf_outputFile.getText());
+            Globals.setExecutable(tf_executable.getText());
             logger.debug("Store properties");
        }
-       if (action.equals("...")) {
-           final JFileChooser fc = new JFileChooser(Globals.getLastDir());
-           fc.setCurrentDirectory(new File(Globals.getOutputDir()));
-           fc.setAcceptAllFileFilterUsed(false);
-           fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-           int returnVal = fc.showOpenDialog(this);
-           if (returnVal == JFileChooser.APPROVE_OPTION) {
-                tf_outputFile.setText(String.valueOf(fc.getSelectedFile()));
-           }
-       }
+        if (action.equals("selectFile")) {
+            final JFileChooser fc = new JFileChooser(Globals.getLastDir());
+            fc.setCurrentDirectory(new File(Globals.getOutputDir()));
+            fc.setAcceptAllFileFilterUsed(false);
+            fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            int returnVal = fc.showOpenDialog(this);
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                 tf_outputFile.setText(String.valueOf(fc.getSelectedFile()));
+            }
+        }
+        if (action.equals("selectExecutable")) {
+            final JFileChooser fc = new JFileChooser(Globals.getLastDir());
+            fc.setCurrentDirectory(new File(Globals.getOutputDir()));
+            fc.setAcceptAllFileFilterUsed(false);
+            fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+            int returnVal = fc.showOpenDialog(this);
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                 tf_executable.setText(String.valueOf(fc.getSelectedFile()));
+            }
+        }
     }
 
     private int indexOf(String[] array, String str) {

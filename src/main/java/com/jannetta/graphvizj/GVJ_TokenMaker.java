@@ -27,7 +27,9 @@ public class GVJ_TokenMaker extends AbstractTokenMaker {
         tokenMap.put("edge", Token.OPERATOR);
         tokenMap.put("graph", Token.OPERATOR);
         tokenMap.put("digraph", Token.OPERATOR);
+        tokenMap.put("diGraph", Token.OPERATOR);
         tokenMap.put("subgraph", Token.OPERATOR);
+        tokenMap.put("subGraph", Token.OPERATOR);
         tokenMap.put("strict", Token.OPERATOR);
 
         tokenMap.put("label", Token.RESERVED_WORD_2);
@@ -77,6 +79,7 @@ public class GVJ_TokenMaker extends AbstractTokenMaker {
      * @param startOffset    The offset at which the line of tokens begins.
      * @return A linked list of tokens representing <code>text</code>.
      */
+    @Override
     public Token getTokenList(Segment text, int startTokenType, final int startOffset) {
 
         resetTokenList();
@@ -771,6 +774,17 @@ public class GVJ_TokenMaker extends AbstractTokenMaker {
         // Return the first token in our linked list.
         return firstToken;
 
+    }
+    
+    @Override
+    public boolean getCurlyBracesDenoteCodeBlocks(int languageIndex) {
+    	return true;
+    }
+    
+    @Override
+    public boolean getShouldIndentNextLineAfter(Token token) {
+    	System.out.println(token.toString());
+    	return super.getShouldIndentNextLineAfter(token);
     }
 
 

@@ -12,6 +12,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
+/**
+ * The console at the bottom of the main panel where the output from the dot executable
+ * is displayed
+ * @author jannetta
+ *
+ */
 public class Console extends JPanel implements ActionListener {
     private static JTextArea console = new JTextArea();
     private static JScrollPane consoleScroller = new JScrollPane(console);
