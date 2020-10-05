@@ -1,21 +1,18 @@
 package com.jannetta.graphvizj.components;
 
-import com.jannetta.graphvizj.components.DotRSyntaxTextArea;
-import com.jannetta.graphvizj.components.DrawPanel;
-import com.jannetta.graphvizj.components.RightHandPanes;
-import com.jannetta.graphvizj.components.TextPanes;
+
 import com.jannetta.graphvizj.controller.Globals;
 import com.jannetta.graphvizj.graphVizAPI.GraphVizAPI;
 import com.jannetta.graphvizj.model.FileRecord;
 import com.jannetta.graphvizj.model.ListOfFiles;
-import org.apache.log4j.Logger;
 import org.fife.ui.autocomplete.AutoCompletion;
 import org.fife.ui.autocomplete.BasicCompletion;
 import org.fife.ui.autocomplete.CompletionProvider;
 import org.fife.ui.autocomplete.DefaultCompletionProvider;
 import org.fife.ui.autocomplete.ShorthandCompletion;
-import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rtextarea.RTextScrollPane;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -30,7 +27,7 @@ import java.util.Properties;
 import java.util.Scanner;
 
 public class MenuBar extends JMenuBar implements ActionListener {
-    private Logger logger = Logger.getLogger(this.getClass());
+	Logger logger = LoggerFactory.getLogger(getClass());
     private Console console = Console.getInstance();
     private TextPanes textPanes;
     private RightHandPanes rightHandPanes;

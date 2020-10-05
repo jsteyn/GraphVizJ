@@ -1,10 +1,12 @@
 package com.jannetta.graphvizj.components;
 
 import com.jannetta.graphvizj.controller.Globals;
-import org.apache.log4j.Logger;
-
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,7 +14,7 @@ import java.io.File;
 import java.util.Properties;
 
 public class Settings extends JFrame implements ActionListener {
-    private Logger logger = Logger.getLogger(this.getClass());
+	Logger logger = LoggerFactory.getLogger(getClass());
     static private Settings settings = null;
     private JPanel holdAll = new JPanel();
 

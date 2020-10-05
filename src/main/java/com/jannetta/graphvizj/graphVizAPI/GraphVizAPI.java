@@ -1,12 +1,14 @@
 package com.jannetta.graphvizj.graphVizAPI;
 
 import com.jannetta.graphvizj.components.Console;
-import org.apache.log4j.Logger;
 
 import java.io.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class GraphVizAPI {
-    private static Logger logger = Logger.getLogger(GraphVizAPI.class);
+	static Logger logger = LoggerFactory.getLogger(GraphVizAPI.class);
     private Console console = Console.getInstance();
 
     /**

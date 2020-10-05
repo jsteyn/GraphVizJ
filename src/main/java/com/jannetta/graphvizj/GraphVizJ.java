@@ -3,13 +3,18 @@ package com.jannetta.graphvizj;
 import com.jannetta.graphvizj.components.*;
 import com.jannetta.graphvizj.components.MenuBar;
 import com.jannetta.graphvizj.controller.Globals;
-import org.apache.log4j.Logger;
-
 import javax.swing.*;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.awt.*;
 
 public class GraphVizJ extends JFrame {
-    private Logger logger = Logger.getLogger(this.getClass());
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	Logger logger = LoggerFactory.getLogger(getClass());
     private Console console = Console.getInstance();
     private MainPanel mainPanel;
     private com.jannetta.graphvizj.components.MenuBar menuBar;
@@ -59,7 +64,8 @@ public class GraphVizJ extends JFrame {
     }
 
     public static void main(String[] args) {
-        GraphVizJ graphVizJ = new GraphVizJ("GraphVizJ");
+        @SuppressWarnings("unused")
+		GraphVizJ graphVizJ = new GraphVizJ("GraphVizJ");
     }
 
 }

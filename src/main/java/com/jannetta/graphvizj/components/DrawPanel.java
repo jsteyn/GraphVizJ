@@ -1,7 +1,8 @@
 package com.jannetta.graphvizj.components;
 
-import org.apache.log4j.Logger;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -10,7 +11,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class DrawPanel extends JPanel {
-    private Logger logger = Logger.getLogger(this.getClass());
+	Logger logger = LoggerFactory.getLogger(getClass());
 
     byte[] byteStream;
     private BufferedImage image;
