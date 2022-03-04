@@ -1,7 +1,7 @@
 # GraphVizJ #
-I like to use dot to create diagrams of all sorts. But GraphViz was really 
+I like to use DOT to create diagrams of all sorts. But the GraphViz editor was really 
 getting on my nerves. It is a very basic program. So I decided to write my
-own tool in Java. It is based on GraphViz because that is what I was getting
+own tool in Java. It is based on the GraphViz editor because that is what I was getting
 used to, but with all the things that were irritating me improved, replaced or
 enhanced.
 
