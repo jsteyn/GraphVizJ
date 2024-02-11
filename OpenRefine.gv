@@ -1,0 +1,13 @@
+digraph tree {
+	node[shape="rectangle", color=cadetblue3, style=filled];
+	openrefine [label="OpenRefine"];
+	webbrowser [label="web browser"];
+	webserver [label="web server"];
+
+	webbrowser -> webserver;
+
+	subgraph cluster_o{
+		rank = same openrefine webserver;
+		openrefine -> webserver [arrowhead=none];
+	}
+}
